@@ -1,7 +1,0 @@
-<Solution>
-  <Configurations>
-    <Platform Name="x64" />
-    <Platform Name="x86" />
-  </Configurations>
-  <Project Path="HustleX.vcxproj" Id="d3b989dd-a5ee-4f2e-a04b-c60ae991f932" />
-</Solution>
