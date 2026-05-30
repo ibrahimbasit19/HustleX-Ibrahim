@@ -16,6 +16,10 @@
 # Mono auto generated files
 mono_crash.*
 
+# Visual Studio workspace files
+*.slnx
+.vs/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
