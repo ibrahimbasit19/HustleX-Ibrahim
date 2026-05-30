@@ -30,6 +30,7 @@ TaskDescriptionDialogue::TaskDescriptionDialogue(const wxString& title, wxString
 
 
 	wxButton* close = new wxButton(this, wxID_ANY, "Close", wxPoint(400, 300), wxDefaultSize);
+	close->Bind(wxEVT_BUTTON, &TaskDescriptionDialogue::close, this);
 
 
 }

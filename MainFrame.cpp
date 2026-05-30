@@ -7,11 +7,11 @@
 #include <wx/filename.h>
 #include <string>
 #include "TaskDescriptionDialogue.h"
-
-
+#include "SignUpDialogue.h"
+#include "LoginDialogue.h"
 MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 { 
-	u1.setContactNo("03331778227");
+	//u1.setContactNo("03331778227");
 
 	// master panels and master sizer.
 	wxPanel* root = new wxPanel(this);
@@ -23,7 +23,7 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 	wxPanel* upper_panel = new wxPanel(root);
 	upper_panel->SetBackgroundColour(wxColor(35, 35, 35)); 
 
-	wxStaticText* welcome_txt = new wxStaticText(upper_panel, wxID_ANY, "Welcome Back USERNAME", wxDefaultPosition); 
+	welcome_txt = new wxStaticText(upper_panel, wxID_ANY, "", wxDefaultPosition); 
 	welcome_txt->SetForegroundColour(wxColor(*wxWHITE)); 
 	welcome_txt->SetFont(heading_font); 
 
@@ -142,6 +142,57 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 	wxPanel* page2 = new wxPanel(book);
 
 	wxPanel* page3 = new wxPanel(book);
+		
+		 notlogged = new wxPanel(page3, wxID_ANY, wxPoint(10,0), wxSize(1800, 1000));
+
+			notlogged->SetBackgroundColour(wxColor(45, 45, 45));
+			wxButton* sign_up = new wxButton(notlogged, wxID_ANY, "Sign Up", wxPoint(550,400), wxSize(200,100));
+			sign_up->SetFont(button_font);
+			sign_up->Bind(wxEVT_BUTTON, &MainFrame::sign_up, this);
+			wxButton* login = new wxButton(notlogged, wxID_ANY , "Login", wxPoint(850,400), wxSize(200, 100));
+			login->SetFont(button_font);
+			login->Bind(wxEVT_BUTTON, &MainFrame::login, this);
+
+		 logged = new wxPanel(page3, wxID_ANY, wxPoint(10, 0), wxSize(1800, 1000));
+
+			logged->SetBackgroundColour(wxColor(45, 45, 45));
+			wxStaticText* USERNAME_LABEL = new wxStaticText(logged, wxID_ANY, "USERNAME :", wxPoint(200, 100), wxDefaultSize);
+			USERNAME_LABEL->SetFont(heading_font);
+			USERNAME_LABEL->SetForegroundColour(wxColor(255, 255, 255));
+			wxStaticText* CONTACT_LABEL = new wxStaticText(logged, wxID_ANY, "Contact : ", wxPoint(500, 100), wxDefaultSize);
+			CONTACT_LABEL->SetFont(heading_font);
+			CONTACT_LABEL->SetForegroundColour(wxColor(255, 255, 255));
+
+			logged_user_name = new wxStaticText(logged, wxID_ANY, "", wxPoint(200, 150), wxDefaultSize);
+			logged_user_name->SetFont(heading_font);
+			logged_user_name->SetForegroundColour(wxColor(255, 255, 255));
+
+			logged_contact = new wxStaticText(logged, wxID_ANY, "", wxPoint(500, 150), wxDefaultSize);
+			logged_contact->SetFont(heading_font);
+			logged_contact->SetForegroundColour(wxColor(255, 255, 255));
+
+
+			wxButton* loogin = new wxButton(logged, wxID_ANY, "Switch account", wxPoint(850, 400), wxSize(200, 100));
+			loogin->SetFont(button_font);
+			loogin->Bind(wxEVT_BUTTON, &MainFrame::login, this);
+
+			logged->Hide();
+			notlogged->Hide();
+
+		if (this->isLogged == false)
+		{
+			logged->Hide();
+			notlogged->Show();
+				
+		}
+		else
+		{
+			notlogged->Hide();
+			logged->Show();
+		}
+		page3->Layout();
+
+
 
 	wxPanel* page4 = new wxPanel(book);
 		// later convert into function.
@@ -174,7 +225,8 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(nullptr, wxID_ANY, title)
 
 void MainFrame::create_task(wxCommandEvent& evt)
 {
-	if (this->count_task < 5)
+
+	if (this->count_task < 30 && this->isLogged == true)
 	{
 		CreateTaskDialogue* task_dialogue = new CreateTaskDialogue("Create a task");
 		task_dialogue->ShowModal();
@@ -184,7 +236,7 @@ void MainFrame::create_task(wxCommandEvent& evt)
 			task_dialogue->get_entered_address(), task_dialogue->get_entered_task_price());
 
 		this->u1.setUSER_US(this->count_task, &this->u1);
-		
+		this->u1.setTaskPhone(this->count_task);
 		long index = this->task_display->InsertItem(this->task_display->GetItemCount(), this->u1.get_US_task_title(this->count_task));
 
 		//wxString formatted_reward = wxString::Format("",)); // basically for display purposes our task_display 
@@ -199,10 +251,11 @@ void MainFrame::create_task(wxCommandEvent& evt)
 		task_dialogue->Destroy();
 	}
 
+
 	else
 
 	{
-		wxLogMessage("Only 5 tasks are allowed per user. If you want to add another task , wait for your previous tasks to get finished.");
+		wxLogMessage("Login Required!");
 	}
 
 
@@ -214,35 +267,74 @@ void MainFrame::descibe_task(wxCommandEvent& evt)
 
 	long selected_Row = this->task_display->GetNextItem(-1, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED);
 
-	
-	// DEBUG FOR CHECKING
+	if (selected_Row != -1)
+	{
+		// DEBUG FOR CHECKING
 	//wxLogMessage("Name : %s", this->task_display->GetItemText(selected_Row, 0));
 
 	//wxLogMessage("Description : %s", this->task_display->GetItemText(selected_Row, 1));
 
 	//wxLogMessage("Reward : %s", this->task_display->GetItemText(selected_Row, 2));
 
-	wxString task_name = this->task_display->GetItemText(selected_Row, 0);
-	wxString task_desc = this->task_display->GetItemText(selected_Row, 1);
-	wxString task_reward = this->task_display->GetItemText(selected_Row, 2);
-	wxString task_address = this->task_display->GetItemText(selected_Row, 3);
-	
+		wxString task_name = this->task_display->GetItemText(selected_Row, 0);
+		wxString task_desc = this->task_display->GetItemText(selected_Row, 1);
+		wxString task_reward = this->task_display->GetItemText(selected_Row, 2);
+		wxString task_address = this->task_display->GetItemText(selected_Row, 3);
 
-	// finding contact number 
-	
-	std::string target;
-	
-	std::string task_name_str = task_name.ToStdString();
-	
-	size_t index = this->u1.give_INDEX_TASKNAME(task_name_str);
-	std::string contact =  this->u1.getUSER_CONTACT(index);
 
-	wxLogMessage(contact);
+		// finding contact number 
 
-	wxString task_contact = contact;
+		std::string target;
 
-	//TaskDescriptionDialogue dialogue("Task Description", task_name, task_desc, task_reward);
-	TaskDescriptionDialogue dialogue("Task", task_name, task_desc, task_reward, task_address, task_contact);
-	dialogue.ShowModal();
-	dialogue.Destroy();
+		std::string task_name_str = task_name.ToStdString();
+
+		size_t index = this->u1.give_INDEX_TASKNAME(task_name_str);
+		std::string contact = this->u1.getUSER_CONTACT(index);
+
+		wxLogMessage(contact);
+
+		wxString task_contact = contact;
+
+		//TaskDescriptionDialogue dialogue("Task Description", task_name, task_desc, task_reward);
+		TaskDescriptionDialogue dialogue("Task", task_name, task_desc, task_reward, task_address, task_contact);
+		dialogue.ShowModal();
+		dialogue.Destroy();
+	}
+	else
+	{
+		wxLogMessage("Select a task!");
+	}
+	
+	
+}
+
+
+void MainFrame::sign_up(wxCommandEvent& evt)
+{
+	SignUpDialogue* s = new SignUpDialogue("Sign UP");
+	s->ShowModal();
+	s->Destroy();
+}
+
+
+void MainFrame::login(wxCommandEvent& evt)
+{
+	LoginDialogue* ld = new LoginDialogue("Login");
+	ld->ShowModal();
+	this->u1.setUserName(ld->give_final_username());
+
+	wxLogMessage(this->u1.getUserName());
+
+
+	this->u1.setContactNo(ld->give_final_contact());
+	this->welcome_txt->SetLabelText("Welcome " + wxString::Format("%s", this->u1.getUserName()));
+	this->welcome_txt->Update();
+	this->isLogged = true;
+	this->logged_user_name->SetLabel(wxString::Format("%s", this->u1.getUserName()));
+	this->logged_contact->SetLabel(wxString::Format("%s", this->u1.getContactNo()));
+
+
+	logged->Show();
+	notlogged->Hide();
+	ld->Destroy();
 }

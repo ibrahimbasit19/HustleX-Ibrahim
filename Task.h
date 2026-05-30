@@ -9,6 +9,7 @@ private:
 	std::string title;
 	std::string description;
 	std::string address;
+	std::string phone_number; //this will later get set during the task creation with the current user.
 	int task_reward{};
 	User* user = nullptr;
 	// User variable to be declared.
@@ -30,6 +31,8 @@ public:
 	std::string getAddress();
 	int Get_task_reward();
 
+	void set_phoneNum();
+	std::string give_phoneNum();
 	std::string get_contact_USER(); // gets contact number from the user.
 
 };

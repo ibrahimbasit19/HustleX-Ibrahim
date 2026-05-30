@@ -45,7 +45,7 @@ void User::create_task(int index, std::string title, std::string desc, std::stri
 	this->tasks[index].setDescription(desc);
 	this->tasks[index].setAddress(address);
 	this->tasks[index].setReward(reward);
-
+	
 }
 
 size_t User::give_INDEX_TASKNAME(std::string target) // we use this function later in taskdescriptiondialogue
@@ -91,5 +91,10 @@ void User::setUSER_US(int index, User* user)
 
 std::string User::getUSER_CONTACT(int index)
 {
-	return this->tasks[index].get_contact_USER();
+	return this->tasks[index].give_phoneNum();
+}
+
+void User::setTaskPhone(int index)
+{
+	this->tasks[index].set_phoneNum();
 }

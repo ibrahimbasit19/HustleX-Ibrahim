@@ -8,7 +8,7 @@ class User
 {
 private:
 	std::string userName;
-	Task tasks[5]; 
+	Task tasks[30];
 	std::string email;
 	std::string contactNo;
 public:
@@ -37,7 +37,7 @@ public:
 	void create_task(int index, std::string title, std::string desc, std::string address, int reward);
 	std::string get_US_task_address(int index);
 
-
+	void setTaskPhone(int index);
 	std::string get_US_task_title(int index); // these functions are called from user and they give title of the task at certain index.
 	std::string get_US_task_desc(int index);
 	int get_US_task_rew(int index);

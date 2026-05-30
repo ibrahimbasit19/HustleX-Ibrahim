@@ -66,7 +66,13 @@ bool Task::getState()
 
 }
 
+std::string Task::give_phoneNum()
+{
+	return this->phone_number;
+}
 
-
-
+void Task::set_phoneNum()
+{
+	this->phone_number = this->user->getContactNo();
+}
 

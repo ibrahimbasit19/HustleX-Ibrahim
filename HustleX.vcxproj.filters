@@ -33,6 +33,12 @@
     <ClInclude Include="TaskDescriptionDialogue.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="SignUpDialogue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="LoginDialogue.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MainFrame.cpp">
@@ -51,6 +57,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TaskDescriptionDialogue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SignUpDialogue.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="LoginDialogue.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
